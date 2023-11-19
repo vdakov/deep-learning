@@ -1,0 +1,10 @@
+{
+    "relu": {
+        "mean_squared_error": {
+            "LOSS": 0.019855882972478867,
+            "MEAN_SQUARED_ERROR": 0.019855882972478867,
+            "VAL_LOSS": 0.01837478019297123,
+            "VAL_MEAN_SQUARED_ERROR": 0.01837478019297123
+        }
+    }
+}
