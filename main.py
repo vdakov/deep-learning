@@ -274,7 +274,7 @@ evaluate_architecture(l, activation_functions, 25, error_functions, [x_train_n, 
 # %%
 activation_function = ['relu']
 error_functions = ['mean_squared_error']
-load_from_file = True
+load_from_file = False
 
 # %%
 l1 = [16, 32, 64, 128, 256, 512, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1]
@@ -309,7 +309,7 @@ evaluate_architecture(l4, activation_functions, 200, error_functions, [x_train_n
 initial_learning_rates = [0.1, 0.01, 0.001]
 decay_rates = [1, 0.96, 0.1]
 num_epochs = 100
-load_from_file = True
+load_from_file = False
 
 # %%
 num_samples = len(x_train_n) * 0.8
@@ -606,7 +606,7 @@ lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
                 decay_steps=10000,
                 decay_rate= 0.96) 
 optimizer=Adam(learning_rate=lr_schedule)
-load_from_file = True
+load_from_file = False
 
 
 evaluate_classification_dataset_architecture(layers, activation_function, optimizer, num_epochs, loss_function, 'sigmoid', 
