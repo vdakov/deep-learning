@@ -1,2 +1,10 @@
 california-housing-dataset.pkl
 saved_models
+json_outputs/*
+latex_tables/*
+figures/*
+
+!json_outputs/.keep
+!latex_tables/.keep
+!figures/.keep
+__pycache__
