@@ -9,7 +9,7 @@ def save_latex_table_from_json_activation_loss(json_file):
     metrics = list(json_data[activations[0]].keys())
 
     with open('latex_tables\\{}.tex'.format(json_file), 'w') as file:
-        file.write(r"""\begin{table}[h]
+        file.write(r"""\begin{table}[H]
 \centering
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
 \hline
@@ -74,7 +74,7 @@ def create_latex_table_from_json_layer_sizes(json_file):
 
     # Create LaTeX table content
     table_content = (
-        "\\begin{table}[h]\n"
+        "\\begin{table}[H]\n"
         "\centering\n"
         "\\begin{tabular}{|c|c|}\n"
         "\\hline\n"
@@ -105,7 +105,7 @@ def create_latex_table_from_json_final_training(json_file_training, json_file_te
 
     # Create LaTeX table content
     table_content = (
-        "\\begin{table}[h]\n"
+        "\\begin{table}[H]\n"
         "\centering\n"
         "\\begin{tabular}{|c|c|}\n"
         "\\hline\n"
@@ -121,4 +121,40 @@ def create_latex_table_from_json_final_training(json_file_training, json_file_te
 
     # Write content to output .tex file
     with open('latex_tables\\{}.tex'.format('final_table'), 'w') as output:
+        output.write(table_content)
+
+
+def create_latex_table_for_classification_validation(json_file):
+    # Read JSON file
+    with open('json_outputs\\{}.json'.format(json_file), 'r') as f:
+        data = json.load(f)
+    
+
+    # Extract values
+    training_loss = data['LOSS']
+    training_accuracy = data['BINARY_ACCURACY']
+    validation_loss = data['VAL_LOSS']
+    validation_accuracy = data['VAL_BINARY_ACCURACY']
+
+    # Create LaTeX table content
+    table_content = (
+        "\\begin{table}[H]\n"
+        "\centering\n"
+        "\\begin{tabular}{|c|c|c|}\n"  # Updated to include an extra column
+        "\\hline\n"
+        "& \\textbf{Training} & \\textbf{Validation} \\\\\n"  # Updated header
+        "\\hline\n"
+        "\\textbf{Loss (Binary Cross-Entropy)} & "
+        f"{training_loss} & {validation_loss} \\\\\n"  # Updated row
+        "\\textbf{Binary Accuracy} & "
+        f"{training_accuracy} & {validation_accuracy} \\\\\n"  # Updated row
+        "\\hline\n"
+        "\\end{tabular}\n\n"
+        "\\caption{Loss on the training and test sets from training on the whole training set. Once again MSE is the loss.}\n"
+        "\\label{tab:final_results}\n"
+        "\\end{table}\n"
+        )
+
+    # Write content to output .tex file
+    with open('latex_tables\\{}.tex'.format(json_file), 'w') as output:
         output.write(table_content)
