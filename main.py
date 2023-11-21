@@ -1,14 +1,13 @@
-# %
 ##submission python export from jupyter notebook
 
-# %%
+
 import sys
 import tensorflow.keras
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
-# %%
+
 print(f"Tensor Flow Version: {tf.__version__}")
 print()
 print(f"Python {sys.version}")
@@ -17,7 +16,7 @@ tf.get_logger().setLevel('ERROR')
 tf.test.is_built_with_cuda()
 tf.test.is_gpu_available(cuda_only=False, min_cuda_compute_capability=None)
 
-# %%
+
 import pickle
 dict = pickle.load(open('california-housing-dataset.pkl', 'rb'))
 x_train, y_train = dict['x_train'], dict['y_train']
@@ -26,11 +25,10 @@ x_test, y_test = dict['x_test'], dict['y_test']
 
 
 
-# %%
 print(x_train.shape, y_train.shape)
 print(x_train[1,:], y_train[1])
 
-# %%
+
 features = ['MedInc', 'HouseAge' ,'AveRooms' ,'AveBedrms' ,'Population', 'AveOccup' ,'Latitude' ,'Longitude' ]
 
 def show_dataset_min_and_max(x, y, features):
@@ -43,18 +41,18 @@ def show_dataset_min_and_max(x, y, features):
 
 
 
-# %%
+
 show_dataset_min_and_max(x_train, y_train, features)
 
-# %%
+
 show_dataset_min_and_max(x_test, y_test, features)
 
-# %%
+
 print(len(y_train[np.where(y_train[np.where(y_train >= 4.8)] < 4.999)]))
 print(len(y_train[y_train >=5]))
 print(len(y_test[y_test >=5]))
 
-# %%
+
 indices_to_remove_train = np.where(y_train >= 5)[0]
 indices_to_remove_test = np.where(y_test >= 5)[0]
 
@@ -64,14 +62,14 @@ x_test_no_5s = np.delete(x_test, indices_to_remove_test, axis=0)
 y_test_no_5s = np.delete(y_test, indices_to_remove_test)
 
 
-# %%
+
 show_dataset_min_and_max(x_train_no_5s, y_train_no_5s, features)
 
-# %% [markdown]
+
 # #### Normalized Values
 # 
 
-# %%
+
 def normalize(x):
     mean = np.mean(x, axis = 0)
     std = np.std(x, axis = 0)
@@ -91,28 +89,26 @@ x_test_n = normalize(x_test_no_5s)
 y_test_n = normalize(y_test_no_5s)
 
 
-# %%
-show_dataset_min_and_max(x_train_n, y_train_n, features)
 
-# %%
+show_dataset_min_and_max(x_train_n, y_train_n, features)
 show_dataset_min_and_max(x_test_n, y_test_n, features)
 
-# %%
+
 print(y_train_n.shape)
 print(y_test_n.shape)
 
-# %% [markdown]
+
 # ## Neural Network Design Experiments
 # 
 
-# %%
+
 from keras.models import Sequential
 from keras.layers import Dense, Flatten
 from tensorflow.keras.optimizers import SGD
 from keras.layers import BatchNormalization
 tf.random.set_seed(1234)
 
-# %%
+
 def initialize_sequential_model(layer_sizes, activation):
     """
     Function  to initialize a sequence of layers of a given size with a given activation function.
@@ -176,7 +172,7 @@ def evaluate_model_on_final_epoch(history):
 
         
 
-# %%
+
 from tensorflow.keras.models import load_model
 import pickle
 import os
@@ -222,7 +218,7 @@ def create_and_train_model(*args):
 # %% [markdown]
 # ### Evaluating Loss and Activation Functions
 
-# %%
+
 import json
 
 def evaluate_architecture(layer_sizes, activation_functions, num_epochs, error_functions, dataset, file_name, load_from_file):
@@ -252,29 +248,18 @@ def evaluate_architecture(layer_sizes, activation_functions, num_epochs, error_f
 
         
 
-# %%
+
 l = [16, 32, 64, 32, 16, 8, 4, 2, 1]
 error_functions = ['mean_absolute_error', 'mean_squared_error', 'mean_absolute_percentage_error']
 activation_functions = ['linear', 'relu', 'elu']
+load_from_file = False
 
-# %%
-evaluate_architecture(l, activation_functions, 25, error_functions, [x_train_n, y_train_n], 'experiment_activation_loss', True)
 
-# %%
-evaluate_architecture(l, activation_functions, 25, error_functions, [x_train_n, y_train_n], 'experiment_activation_loss', True)
+evaluate_architecture(l, activation_functions, 25, error_functions, [x_train_n, y_train_n], 'experiment_activation_loss', load_from_file)
 
-# %%
-# from latex_export_functions import save_latex_table_from_json_activation_loss
-
-# save_latex_table_from_json_activation_loss('experiment_activation_loss')
-
-# %% [markdown]
-# ### Evaluating Neural Network Layer Structures
-
-# %%
 activation_function = ['relu']
 error_functions = ['mean_squared_error']
-load_from_file = False
+
 
 # %%
 l1 = [16, 32, 64, 128, 256, 512, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1]
@@ -282,42 +267,28 @@ l2 = [16, 32, 16, 8, 1]
 l3 = [16, 32, 64, 32, 16, 8, 4, 2, 1]
 l4 = [16, 32, 64, 128, 256, 128, 64, 32, 16, 8, 4, 1]
 
-# %%
-evaluate_architecture(l1, activation_function, 200, error_functions, [x_train_n, y_train_n], 'experiment_size_{}'.format(l1), load_from_file)
+epochs = 200
 
-# %%
-evaluate_architecture(l2, activation_function, 200, error_functions, [x_train_n, y_train_n], 'experiment_size_{}'.format(l2), load_from_file)
 
-# %%
-evaluate_architecture(l3, activation_function, 200, error_functions, [x_train_n, y_train_n], 'experiment_size_{}'.format(l3), load_from_file)
+evaluate_architecture(l1, activation_function, epochs, error_functions, [x_train_n, y_train_n], 'experiment_size_{}'.format(l1), load_from_file)
+evaluate_architecture(l2, activation_function, epochs, error_functions, [x_train_n, y_train_n], 'experiment_size_{}'.format(l2), load_from_file)
+evaluate_architecture(l3, activation_function, epochs, error_functions, [x_train_n, y_train_n], 'experiment_size_{}'.format(l3), load_from_file)
+evaluate_architecture(l4, activation_functions, epochs, error_functions, [x_train_n, y_train_n], 'experiment_size_{}'.format(l4), load_from_file)
 
-# %%
-evaluate_architecture(l4, activation_functions, 200, error_functions, [x_train_n, y_train_n], 'experiment_size_{}'.format(l4), load_from_file)
 
-# # %%
-# from latex_export_functions import create_latex_table_from_json_layer_sizes
 
-# create_latex_table_from_json_layer_sizes('experiment_size_{}'.format(l1))
-# create_latex_table_from_json_layer_sizes('experiment_size_{}'.format(l2))
-# create_latex_table_from_json_layer_sizes('experiment_size_{}'.format(l3))
-# create_latex_table_from_json_layer_sizes('experiment_size_{}'.format(l4))
-
-# %% [markdown]
-# ### Optimizer Evaluation
-
-# %%
 initial_learning_rates = [0.1, 0.01, 0.001]
 decay_rates = [1, 0.96, 0.1]
 num_epochs = 100
 load_from_file = False
 
-# %%
+
 num_samples = len(x_train_n) * 0.8
 batch_size = 128
 number_of_steps_per_epoch = num_samples / batch_size
 print('Number of steps per epoch', number_of_steps_per_epoch)
 
-# %%
+
 import json
 from tensorflow.keras.optimizers import Adam, SGD
 
@@ -364,32 +335,19 @@ def evaluate_optimizer_and_learning_rate(initial_learning_rates, decay_rates, op
     with open('json_outputs\\{}.json'.format(file_name), 'w') as file:
         json.dump(table, file, indent=4)
 
+
+num_epochs = 100
         
 
-# %%
-evaluate_optimizer_and_learning_rate(initial_learning_rates, decay_rates, 'Adam', 200, [x_train_n, y_train_n], 'adam_learning_rate_table', load_from_file)
+evaluate_optimizer_and_learning_rate(initial_learning_rates, decay_rates, 'Adam', num_epochs, [x_train_n, y_train_n], 'adam_learning_rate_table', load_from_file)
+evaluate_optimizer_and_learning_rate(initial_learning_rates, decay_rates, 'SGD', num_epochs, [x_train_n, y_train_n], 'sgd_learning_rate_table', load_from_file)
+evaluate_optimizer_and_learning_rate(initial_learning_rates, decay_rates, 'SGDM_Small', num_epochs, [x_train_n, y_train_n], 'sgd_small_learning_rate_table', load_from_file)
+evaluate_optimizer_and_learning_rate(initial_learning_rates, decay_rates, 'SGDM_Large', num_epochs, [x_train_n, y_train_n], 'sgd_large_learning_rate_table', load_from_file)
 
-# %%
-evaluate_optimizer_and_learning_rate(initial_learning_rates, decay_rates, 'SGD', 100, [x_train_n, y_train_n], 'sgd_learning_rate_table', load_from_file)
 
-# %%
-evaluate_optimizer_and_learning_rate(initial_learning_rates, decay_rates, 'SGDM_Small', 100, [x_train_n, y_train_n], 'sgd_small_learning_rate_table', load_from_file)
 
-# %%
-evaluate_optimizer_and_learning_rate(initial_learning_rates, decay_rates, 'SGDM_Large', 100, [x_train_n, y_train_n], 'sgd_large_learning_rate_table', load_from_file)
-
-# %%
-# from latex_export_functions import save_latex_table_json_optimizer
-
-# save_latex_table_json_optimizer('adam_learning_rate_table')
-# save_latex_table_json_optimizer('sgd_learning_rate_table')
-# save_latex_table_json_optimizer('sgd_large_learning_rate_table')
-# save_latex_table_json_optimizer('sgd_small_learning_rate_table')
-
-# %% [markdown]
 # ### Final Training and Plots
 
-# %%
 def create_and_train_final_model(*args):
     layer_sizes, activation_function, epochs, optimizer, loss_function, error_functions, model_name, dataset, load_from_file = args
     x_train_n, y_train_n = dataset
@@ -474,7 +432,7 @@ def evaluate_full_dataset_architecture(layers, activation_function, optimizer, n
 
         
 
-# %%
+
 num_epochs = 200
 layers = [16, 32, 64, 128, 256, 128, 64, 32, 16, 8, 4, 1]
 activation_function = 'relu'
@@ -485,19 +443,15 @@ lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
                 decay_rate= 0.96) 
 optimizer = Adam(learning_rate=lr_schedule)
 load_from_file = False
-evaluate_full_dataset_architecture(layers, activation_function, optimizer, 200, loss_function, 
+
+evaluate_full_dataset_architecture(layers, activation_function, optimizer, num_epochs, loss_function, 
                                    [x_train_n, y_train_n], [x_test_n, y_test_n], 'final_training', load_from_file)
 
 
-# %%
-# from latex_export_functions import create_latex_table_from_json_final_training
 
-# create_latex_table_from_json_final_training('final_training-training_set', 'final_training-test_set')
-
-# %% [markdown]
 # ### Change to Classification Neural Network
 
-# %%
+
 indices_to_remove_train = np.where(y_train >= 5)[0]
 indices_to_remove_test = np.where(y_test >= 5)[0]
 
@@ -520,7 +474,7 @@ y_test_classification = y_test_no_5s
 
 dataset_classification_train = [x_train_classification, y_train_classification]
 
-# %%
+
 def visualize_and_plot_classification(history, test_set, save_filename):
     """ 
     Function to visualize the predicted regression values vs the actual ones
@@ -541,7 +495,6 @@ def visualize_and_plot_classification(history, test_set, save_filename):
     plt.savefig(f'figures\\{save_filename}.png')
     plt.show()
 
-# %%
 def create_and_train_classification_model(*args):
     layer_sizes, activation_function, epochs, optimizer, loss_function, output_function, model_name, dataset, validation_split, load_from_file = args
     x_train_n, y_train_n = dataset
@@ -579,9 +532,6 @@ def create_and_train_classification_model(*args):
 
     return model, history
 
-
-
-
 def evaluate_classification_dataset_architecture(layers, activation_function, optimizer, num_epochs, loss_function, output_function, dataset, validation_split, file_name, load_from_file):
     model_name = file_name
     m, h= create_and_train_classification_model(
@@ -596,7 +546,6 @@ def evaluate_classification_dataset_architecture(layers, activation_function, op
 
     return m, h
 
-# %%
 num_epochs = 200
 layers = [16, 32, 64, 128, 256, 128, 64, 32, 16, 8, 4]
 activation_function = 'relu'
@@ -613,31 +562,27 @@ evaluate_classification_dataset_architecture(layers, activation_function, optimi
                                              dataset_classification_train, 0.2, 'classificaiton_retraining_200', load_from_file )
 
 
-# # %%
-# from latex_export_functions import create_latex_table_for_classification_validation
+num_epochs = 100
 
-# create_latex_table_for_classification_validation('classificaiton_retraining_200')
-# create_latex_table_for_classification_validation('classificaiton_retraining_100')
-
-# %%
 optimizer=Adam(learning_rate=lr_schedule)
-evaluate_classification_dataset_architecture(layers, activation_function, optimizer, 100, loss_function, 'sigmoid', 
+evaluate_classification_dataset_architecture(layers, activation_function, optimizer, num_epochs, loss_function, 'sigmoid', 
                                              dataset_classification_train, 0.2, 'classificaiton_retraining_100', load_from_file )
 
 
-# %%
+
 optimizer=Adam(learning_rate=lr_schedule)
-classification_model, classification_history = evaluate_classification_dataset_architecture(layers, 'relu', optimizer, 100, loss_function, 'sigmoid', 
+
+classification_model, classification_history = evaluate_classification_dataset_architecture(layers, 'relu', optimizer, num_epochs, loss_function, 'sigmoid', 
                                              dataset_classification_train, 0, 'classification_training_no_validation_set', load_from_file )
 
-# %%
+
 loss_train, accuracy_train = classification_model.evaluate(x_train_classification, y_train_classification)
 print(f'Binary Crossentropy Loss on Training Set: {loss_train}')
 print(f'Accuracy on Training Set: {accuracy_train}')
 
-# %%
 loss_test, accuracy_test = classification_model.evaluate(x_test_classification, y_test_classification)
 print(f'Binary Crossentropy Loss on Test Set: {loss_test}')
 print(f'Accuracy on Test Set: {accuracy_test}')
+
 
 
